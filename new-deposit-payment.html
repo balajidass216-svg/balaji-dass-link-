@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>UPI Payment</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+    text-align:center;
+}
+
+.box{
+    max-width:400px;
+    margin:30px auto;
+    background:white;
+    padding:25px 15px;
+    border-radius:15px;
+    box-shadow:0 3px 15px rgba(0,0,0,.15);
+}
+
+h2{
+    margin-top:0;
+}
+
+.amount{
+    font-size:28px;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+#qrcode{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:20px 0;
+}
+
+#qrcode img{
+    width:260px;
+    height:260px;
+}
+
+.upi{
+    font-size:16px;
+    font-weight:bold;
+    word-break:break-all;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>Scan & Pay</h2>
+
+    <div class="amount" id="amount">
+        Loading...
+    </div>
+
+    <div id="qrcode"></div>
+
+    <div class="upi">
+        UPI: 7KW0568000@mairtel
+    </div>
+
+</div>
+
+<script>
+
+// Deposit page se automatically amount milega
+const params = new URLSearchParams(window.location.search);
+const amount = params.get("amount");
+
+// UPI ID
+const upiId = "7KW0568000@mairtel";
+
+if (!amount) {
+
+    document.getElementById("amount").innerText =
+        "Amount nahi mila";
+
+} else {
+
+    document.getElementById("amount").innerText =
+        "₹" + amount;
+
+    const upi =
+        "upi://pay" +
+        "?pa=" + encodeURIComponent(upiId) +
+        "&am=" + encodeURIComponent(amount) +
+        "&cu=INR";
+
+    const qr =
+        "https://api.qrserver.com/v1/create-qr-code/" +
+        "?size=260x260&data=" +
+        encodeURIComponent(upi);
+
+    document.getElementById("qrcode").innerHTML =
+        '<img src="' + qr + '" alt="UPI QR Code">';
+
+}
+
+</script>
+
+</body>
+</html>
